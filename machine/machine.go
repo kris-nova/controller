@@ -9,13 +9,16 @@ import (
 
 	"github.com/kubicorn/kubicorn/pkg/logger"
 	"fmt"
+	"github.com/kubicorn/controller/backoff"
 )
 
 func ConcurrentReconcileMachines(cfg *ServiceConfiguration) chan error {
 	ch := make(chan error)
 	mm := cfg.CloudProvider
+	t := backoff.NewBackoff("crm")
 	go func() {
 		for {
+			t.Hang()
 			cm, err := getClientMeta(cfg)
 			if err != nil {
 				ch <- fmt.Errorf("Unable to authenticate client: %v", err)
@@ -40,10 +43,10 @@ func ConcurrentReconcileMachines(cfg *ServiceConfiguration) chan error {
 						ch <- fmt.Errorf("Unable to create machine [%s]: %v", machine.Name, err)
 						continue
 					}
-					logger.Info("Created machine: %s", machine.Name)
+					logger.Debug("Created machine: %s", machine.Name)
 					continue
 				}
-				logger.Info("Machine already exists: %s", machine.Name)
+				logger.Debug("Machine already exists: %s", machine.Name)
 			}
 		}
 	}()

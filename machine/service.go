@@ -6,7 +6,7 @@ import (
 
 func RunService(cfg *ServiceConfiguration) {
 
-	logger.Info("Starting infinite loop...")
+	logger.Info("Starting controller loop...")
     errchan := ConcurrentReconcileMachines(cfg)
     for {
     	select {
