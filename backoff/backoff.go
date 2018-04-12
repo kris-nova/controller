@@ -4,15 +4,15 @@ import "time"
 
 type backoff struct {
 	name string
-	i int
-	n int
+	i    int
+	n    int
 }
 
 func NewBackoff(name string) *backoff {
 	return &backoff{
 		name: name,
-		i: 1,
-		n: 1,
+		i:    1,
+		n:    1,
 	}
 }
 

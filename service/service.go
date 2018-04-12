@@ -1,4 +1,4 @@
-package machine
+package service
 
 import (
 	"github.com/kubicorn/kubicorn/pkg/logger"
@@ -7,11 +7,11 @@ import (
 func RunService(cfg *ServiceConfiguration) {
 
 	logger.Info("Starting controller loop...")
-    errchan := ConcurrentReconcileMachines(cfg)
-    for {
-    	select {
-    	case e1 := <- errchan:
-    		logger.Warning(e1.Error())
+	errchan := ConcurrentReconcileMachines(cfg)
+	for {
+		select {
+		case e1 := <-errchan:
+			logger.Warning(e1.Error())
 		}
 	}
 }

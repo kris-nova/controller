@@ -1,4 +1,4 @@
-package machine
+package service
 
 import (
 	"io/ioutil"
@@ -7,11 +7,10 @@ import (
 
 type CloudProvider MachineMutation
 
-
 type ServiceConfiguration struct {
 	KubeConfigContent string
 	cloudProviderName string
-	CloudProvider CloudProvider
+	CloudProvider     CloudProvider
 }
 
 func (s *ServiceConfiguration) GetFilePath() (string, error) {
