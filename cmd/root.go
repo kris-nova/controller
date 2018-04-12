@@ -18,25 +18,26 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/spf13/cobra"
-	"github.com/kubicorn/controller/loop"
+	"github.com/kubicorn/controller/service"
 	"github.com/kubicorn/kubicorn/pkg/logger"
+	"github.com/spf13/cobra"
 )
 
-var cfgFile string
+var cfg = &service.ServiceConfiguration{}
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "kubicorn-controller",
 	Short: "The Kubicorn machine controller",
-	Long: `Run the Kubicorn controller to reconcile your infrastructure like the beautiful person you are.`,
+	Long:  `Run the Kubicorn controller to reconcile your infrastructure like the beautiful person you are.`,
 	Run: func(cmd *cobra.Command, args []string) {
 
+		if cfg.KubeConfigContent == "" {
+			logger.Critical("Required flag `kubeconfig-content` not set!")
+			os.Exit(99)
+		}
 
-
-		// TODO @kris-nova
-		// We need to hack in here with the real control loop (once I write it...)
-		loop.RunService()
+		service.RunService(cfg)
 	},
 }
 
@@ -52,5 +53,6 @@ func Execute() {
 func init() {
 
 	rootCmd.PersistentFlags().IntVarP(&logger.Level, "verbose", "v", 4, "Log level")
+	rootCmd.Flags().StringVarP(&cfg.KubeConfigContent, "kubeconfig-content", "k", "", "The content of the kubeconfig file to authenticate with.")
 
 }
